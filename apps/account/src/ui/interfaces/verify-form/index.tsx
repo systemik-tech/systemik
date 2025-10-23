@@ -1,5 +1,6 @@
 "use client";
 
+import { useForm, useStore } from "@tanstack/react-form";
 import { ComponentProps } from "react";
 import {
   Field,
@@ -11,14 +12,48 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
+  REGEXP_ONLY_DIGITS,
 } from "ui/src/components/input-otp";
+import { Spinner } from "ui/src/components/spinner";
 import { cn } from "ui/src/utils/cn";
+import { z } from "zod";
+import { verifyOtp } from "@/lib/actions/verify";
 
-export function OTPForm({ className, ...props }: ComponentProps<"div">) {
+type OTPFormProps = ComponentProps<"div"> & {
+  email: string;
+};
+
+const OTP_LENGTH = 6;
+const formSchema = z.object({
+  otp: z.string().length(OTP_LENGTH, "OTP must be 6 digits"),
+});
+
+export function OTPForm({ email, className, ...props }: OTPFormProps) {
+  const form = useForm({
+    defaultValues: { otp: "" },
+    validators: { onSubmit: formSchema },
+    onSubmit: async ({ value }) => {
+      // Pass email along with otp to the verify function
+      const { success, message } = await verifyOtp({
+        email,
+        otp: value.otp,
+      });
+
+      if (!success) {
+        // You can show an error message in the UI
+        alert(message);
+      } else {
+        // Optional: redirect user to confirm page
+        window.location.href = "/confirm";
+      }
+    },
+  });
+
+  const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
+
   return (
     <div
       className={cn(
-        // Make sure the outer container is not enforcing center alignment on large screens
         "flex w-full flex-col items-center lg:items-start lg:justify-start max-w-sm",
         className
       )}
@@ -29,38 +64,75 @@ export function OTPForm({ className, ...props }: ComponentProps<"div">) {
         onSubmit={(e) => e.preventDefault()}
       >
         <FieldGroup className="flex w-full justify-start">
-          <Field className="w-full flex justify-start">
-            <FieldLabel className="sr-only" htmlFor="otp">
-              Verification code
-            </FieldLabel>
+          <form.Field name="otp">
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
-            {/* Align center on mobile, left on large */}
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel className="sr-only" htmlFor={field.name}>
+                    Verification code
+                  </FieldLabel>
 
-            <InputOTP
-              containerClassName="justify-center lg:justify-start"
-              id="otp"
-              maxLength={6}
-            >
-              <div className="flex justify-center lg:justify-start gap-3">
-                <InputOTPGroup className="gap-3">
-                  {[0, 1, 2, 3, 4, 5].map((i) => (
-                    <InputOTPSlot
-                      className={cn(
-                        "h-14 w-12 rounded-lg border-2 border-input text-lg transition-all",
-                        "data-[active=true]:border-ring"
-                      )}
-                      index={i}
-                      key={i}
-                    />
-                  ))}
-                </InputOTPGroup>
-              </div>
-            </InputOTP>
+                  <div className="relative flex justify-center">
+                    <InputOTP
+                      containerClassName="justify-center"
+                      disabled={isSubmitting}
+                      id={field.name}
+                      maxLength={6}
+                      onChange={(value) => {
+                        field.handleChange(value);
+                        if (
+                          value.length === OTP_LENGTH &&
+                          field.state.meta.isValid
+                        ) {
+                          form.handleSubmit();
+                        }
+                      }}
+                      pattern={REGEXP_ONLY_DIGITS}
+                      value={field.state.value}
+                    >
+                      <div className="flex justify-center gap-3">
+                        <InputOTPGroup className="gap-3">
+                          {[0, 1, 2, 3, 4, 5].map((i) => (
+                            <InputOTPSlot
+                              className={cn(
+                                "h-14 w-12 rounded-lg border-2 border-input text-lg transition-all",
+                                isSubmitting
+                                  ? "cursor-not-allowed opacity-50"
+                                  : "data-[active=true]:border-ring"
+                              )}
+                              index={i}
+                              key={i}
+                            />
+                          ))}
+                        </InputOTPGroup>
+                      </div>
+                    </InputOTP>
 
-            <FieldDescription className="text-center lg:text-left">
-              Enter the 6-digit code sent to your email.
-            </FieldDescription>
-          </Field>
+                    {isSubmitting && (
+                      <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/60 backdrop-blur-sm">
+                        <Spinner className="size-6 text-primary" />
+                      </div>
+                    )}
+                  </div>
+
+                  <FieldDescription className="text-center">
+                    {(() => {
+                      if (isInvalid) {
+                        return field.state.meta.errors.join(", ");
+                      }
+                      if (isSubmitting) {
+                        return "Verifying your code...";
+                      }
+                      return "Enter the 6-digit code sent to your email.";
+                    })()}
+                  </FieldDescription>
+                </Field>
+              );
+            }}
+          </form.Field>
 
           <FieldDescription className="text-center lg:text-left text-sm">
             Didn&apos;t receive the code?{" "}

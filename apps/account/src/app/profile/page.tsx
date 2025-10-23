@@ -1,9 +1,11 @@
-import { EmptyPage } from "@/ui/interfaces/profile/empty-page";
+import { createClient } from "@/lib/supabase/server";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getClaims();
   return (
     <main>
-      <EmptyPage />
+      <div>You are logged in</div>
     </main>
   );
 }

@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "generate-tailwind-classes": "npx @tailwindcss/cli -i ./src/styles/input.css -o ./src/styles/output.css"
+    "generate-tailwind-classes": "npx @tailwindcss/cli -i ./src/styles/input.css -o ../../apps/web/src/app/globals.css --watch"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.15",
