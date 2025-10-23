@@ -1,0 +1,11 @@
+{
+  "version": 3,
+  "builds": [
+    { "src": "apps/web/package.json", "use": "@vercel/next" },
+    { "src": "apps/account/package.json", "use": "@vercel/next" }
+  ],
+  "routes": [
+    { "src": "/account/(.*)", "dest": "/apps/account/$1" },
+    { "src": "/(.*)", "dest": "/apps/web/$1" }
+  ]
+}
