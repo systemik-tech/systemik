@@ -27,10 +27,11 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
+  const startTime = Date.now();
   // Do not run code between createServerClient and auth.getUser().
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims;
+  console.log(`Finished JWT verification in ${Date.now() - startTime}ms`);
 
   const pathname = request.nextUrl.pathname;
 

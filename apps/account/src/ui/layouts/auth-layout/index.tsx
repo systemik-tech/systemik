@@ -6,8 +6,8 @@ import { H2 } from "@/ui/typography/h2";
 
 export const AuthLayoutComponent = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="grid min-h-svh grid-cols-1 lg:grid-cols-5">
-      <Container className="relative hidden py-24 bg-neutral-300 lg:flex flex-col items-start justify-between lg:col-span-2">
+    <div className="grid h-screen overscroll-none overflow-y-scroll grid-cols-1 lg:grid-cols-5">
+      <Container className="relative hidden py-24 bg-[#61ECFF] lg:flex flex-col items-start justify-between lg:col-span-2">
         <div className="flex flex-col gap-8 text-balance">
           <BrandLogo />
           <H2>

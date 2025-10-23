@@ -4,7 +4,7 @@ import { Ready } from "@/ui/pages/home/ready";
 
 export default function HomePage() {
   return (
-    <main className="">
+    <main>
       <Hero />
       <Ready />
       <Cta />

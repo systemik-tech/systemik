@@ -4,14 +4,32 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "**/.env*",
+        "next.config.*",
+        "tailwind.config.*",
+        "postcss.config.*",
+        "tsconfig*.json"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "lib/**",
+        "build/**"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]
     },
     "check-types": {
       "dependsOn": ["^check-types"]
+    },
+    "deploy": {
+      "dependsOn": ["^build", "build"],
+      "cache": false
     },
     "dev": {
       "cache": false,

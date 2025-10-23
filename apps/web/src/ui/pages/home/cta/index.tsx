@@ -14,10 +14,10 @@ export const Cta = () => (
       <div className="w-full py-12 flex flex-col items-start px-6 text-left">
         <H2 className="font-semibold">Sign up for a newsletter</H2>
         <div className="mt-4 w-20 h-1 bg-[#61ECFF] rounded" />
-        <Lead className="mt-6 md:text-xl max-w-lg text-neutral-300">
-          We send out a newsletter full of content about the e-commerce
-          landscape. No spam - we promise!
-        </Lead>
+        <Text className="mt-6 text-neutral-300 max-w-2xl">
+          We send out a newsletter full of content about the tech landscape. No
+          spam - we promise!
+        </Text>
 
         <form
           aria-label="newsletter-signup"
@@ -33,7 +33,8 @@ export const Cta = () => (
           <Button
             aria-label="submit-email"
             className="absolute -right-3 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded shadow-lg grid place-items-center"
-            type="submit"
+            disabled
+            type="button"
           >
             {/* Arrow icon */}
             <svg

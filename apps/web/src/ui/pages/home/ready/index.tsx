@@ -13,26 +13,26 @@ export const Ready = () => {
       <Container className="grid grid-cols-1 gap-6 md:grid-cols-3 md:px-8 lg:px-24">
         <div className="md:col-span-1 flex flex-col gap-3 items-start md:items-start">
           <H2 className="text-2xl sm:text-3xl md:text-4xl">
-            The Future of Digital Experiences? Systemik is Ready.
+            The Future of Digital Experiences? SystemiK is Ready.
           </H2>
           <Lead>Are you?</Lead>
         </div>
         <div className="text-balance lg:col-span-2 space-y-4">
           <Text>
-            The digital world is moving fast  from AI-powered personalization
-            and progressive web apps to cross-platform mobile experiences that
+            The digital world is moving fast from AI-powered personalization and
+            progressive web apps to cross-platform mobile experiences that
             connect everything.
           </Text>
           <Text>
-            At <strong>SystemiK</strong>, we dont just keep up with the pace of
-            change  we help you lead it. As your strategic partner in web and
+            At <strong>SystemiK</strong>, we don't just keep up with the pace of
+            change we help you lead it. As your strategic partner in web and
             mobile development, we turn your ideas into seamless digital
             experiences that grow with your business.
           </Text>
           <Text>
             From high-performing websites to intuitive mobile apps, we build
             reliable, scalable solutions that put your brand everywhere your
-            customers are  and keep them coming back.
+            customers are and keep them coming back.
           </Text>
         </div>
       </Container>

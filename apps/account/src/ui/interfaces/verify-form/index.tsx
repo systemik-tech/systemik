@@ -42,10 +42,8 @@ export function OTPForm({ email, className, ...props }: OTPFormProps) {
       if (!success) {
         // You can show an error message in the UI
         alert(message);
-      } else {
-        // Optional: redirect user to confirm page
-        window.location.href = "/confirm";
       }
+      return;
     },
   });
 
@@ -136,7 +134,7 @@ export function OTPForm({ email, className, ...props }: OTPFormProps) {
 
           <FieldDescription className="text-center lg:text-left text-sm">
             Didn&apos;t receive the code?{" "}
-            <a className="underline underline-offset-2" href="#">
+            <a className="underline underline-offset-2" href="/login">
               Resend
             </a>
           </FieldDescription>

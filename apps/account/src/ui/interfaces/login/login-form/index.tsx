@@ -1,6 +1,7 @@
 "use client";
 
-import { useForm } from "@tanstack/react-form";
+import { AuthError } from "@supabase/supabase-js";
+import { useForm, useStore } from "@tanstack/react-form";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 import { toast } from "sonner";
@@ -15,6 +16,7 @@ import {
 import { Input } from "ui/src/components/input/page";
 import { cn } from "ui/src/utils/cn";
 import { z } from "zod";
+import { login } from "@/lib/actions/login";
 
 const formSchema = z.object({
   email: z.email({
@@ -32,22 +34,18 @@ export const LoginForm = ({ className, ...props }: ComponentProps<"form">) => {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      toast("You submitted the following values:", {
-        description: (
-          <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-            <code>{JSON.stringify(value, null, 2)}</code>
-          </pre>
-        ),
-        position: "bottom-right",
-        classNames: {
-          content: "flex flex-col gap-2",
-        },
-        style: {
-          "--border-radius": "calc(var(--radius)  + 4px)",
-        } as React.CSSProperties,
-      });
+      try {
+        await login(value.email);
+      } catch (error: unknown) {
+        if (error instanceof AuthError) {
+          toast.error(error.message);
+        }
+      }
     },
   });
+  const canSubmit = useStore(form.store, (state) => state.canSubmit);
+  const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
+
   return (
     <form
       className={cn("flex w-full flex-col gap-6 max-w-sm", className)}
@@ -84,7 +82,9 @@ export const LoginForm = ({ className, ...props }: ComponentProps<"form">) => {
           }}
         </form.Field>
         <Field>
-          <Button type="submit">Login</Button>
+          <Button disabled={!canSubmit} type="submit">
+            {isSubmitting ? "..." : "Login"}
+          </Button>
         </Field>
         <Field>
           <FieldDescription className="text-center">
